@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wordle/game_logic.dart';
 import 'package:wordle/screens/game_screen.dart';
 
 void main() {

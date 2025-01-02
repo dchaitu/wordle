@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:wordle/provider/text_input_provider.dart';
@@ -15,61 +15,66 @@ Future<String> fetchWord() async {
       var word = jsonData['word'];
       print("word ${jsonData['word']}");
       return word;
-    } else
-      return "Not recieved";
+    } else {
+      return "Not received";
+    }
   } catch (e) {
     return "Error $e";
   }
 }
 
-String getResult(WidgetRef ref) {
-  bool isWordEntered = ref.watch(textInputProvider).isWordEntered;
-  bool isMatched = ref.watch(textInputProvider).isMatched;
 
-  return (isMatched && isWordEntered) ? "Word Matched" : "Word Not Matched";
-}
-
-
-Widget showOldWords(WidgetRef ref){
+Widget showOldWords(WidgetRef ref) {
   List<String> userWords = ref.read(textInputProvider).userWords;
-  if(userWords.isNotEmpty)
-    {
-      List<Widget> words = userWords.map((word) => Text(word)).toList();
-      return Column(children: words);
-    }
-  else{
+  if (userWords.isNotEmpty) {
+    List<Widget> words = userWords.map((word) => Text(word)).toList();
+    return Column(children: words);
+  } else {
     return const SizedBox();
   }
 }
 
-Widget showClues(WidgetRef ref)
-{
-  List<Object> clues = ref.read(textInputProvider).clues;
-
-  Widget correctPositionClues = clues.map(clue["actual"]=> Text());
-}
-
-
-void getClues() {
-  String currentWord = state.currentWord;
-  String actualWord = state.actualWord;
+Widget showClue(WidgetRef ref, String word) {
   List<TextSpan> letters = [];
+  String actualWord = ref.read(textInputProvider).actualWord;
   for (int i = 0; i < actualWord.length; i++) {
-    if (currentWord[i] == actualWord[i]) {
-      // newClue["actual"]?.add(currentWord[i]);
-      letters.add(TextSpan(text: currentWord[i],style: const TextStyle(color: Colors.green)));
-      // Text()
-    } else if (actualWord.contains(currentWord[i])) {
-      letters.add(TextSpan(text: currentWord[i],style: const TextStyle(color: Colors.orange)));
-
-      // newClue['current']?.add(currentWord[i]);
-    }
-    else
-    {
-      letters.add(TextSpan(text: currentWord[i],style: const TextStyle(color: Colors.red)));
-
+    if (word[i] == actualWord[i]) {
+      letters.add(TextSpan(
+          text: word[i],
+          style: const TextStyle(
+              color: Colors.green, fontSize: 20, letterSpacing: 3)));
+    } else if (actualWord.contains(word[i])) {
+      letters.add(TextSpan(
+          text: word[i],
+          style: const TextStyle(
+              color: Colors.orange, fontSize: 20, letterSpacing: 3)));
+    } else {
+      letters.add(TextSpan(
+          text: word[i],
+          style: const TextStyle(
+              color: Colors.red, fontSize: 20, letterSpacing: 3)));
     }
   }
-  Widget newClue = RichText(text:TextSpan(children: letters), );
-  state = state.copyWith(clues: [...state.clues, newClue]);
+
+  Widget newClue = RichText(text: TextSpan(children: letters));
+  return newClue;
+}
+
+Widget showAllClues(WidgetRef ref) {
+  List<String> userWords = ref.read(textInputProvider).userWords;
+  List<Widget> clues = [];
+  for (String word in userWords) {
+    clues.add(showClue(ref, word));
+  }
+  return Column(children: clues);
+}
+
+String showAnswer(WidgetRef ref) {
+  int noOfChances = ref.watch(textInputProvider).noOfChances;
+  String actualWord = ref.read(textInputProvider).actualWord;
+  if (noOfChances < 1) {
+    return "The Answer is $actualWord";
+  } else {
+    return "No of Chances remaining $noOfChances";
+  }
 }
