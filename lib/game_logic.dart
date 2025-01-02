@@ -37,22 +37,23 @@ Widget showOldWords(WidgetRef ref) {
 Widget showClue(WidgetRef ref, String word) {
   List<TextSpan> letters = [];
   String actualWord = ref.read(textInputProvider).actualWord;
+  double currLetterSpacing = 50.0;
   for (int i = 0; i < actualWord.length; i++) {
     if (word[i] == actualWord[i]) {
       letters.add(TextSpan(
           text: word[i],
-          style: const TextStyle(
-              color: Colors.green, fontSize: 20, letterSpacing: 3)));
+          style: TextStyle(
+              color: Colors.green, fontSize: 20, letterSpacing: currLetterSpacing)));
     } else if (actualWord.contains(word[i])) {
       letters.add(TextSpan(
           text: word[i],
-          style: const TextStyle(
-              color: Colors.orange, fontSize: 20, letterSpacing: 3)));
+          style: TextStyle(
+              color: Colors.orange, fontSize: 20, letterSpacing: currLetterSpacing)));
     } else {
       letters.add(TextSpan(
           text: word[i],
-          style: const TextStyle(
-              color: Colors.red, fontSize: 20, letterSpacing: 3)));
+          style: TextStyle(
+              color: Colors.red, fontSize: 20, letterSpacing: currLetterSpacing)));
     }
   }
 
@@ -65,6 +66,7 @@ Widget showAllClues(WidgetRef ref) {
   List<Widget> clues = [];
   for (String word in userWords) {
     clues.add(showClue(ref, word));
+    clues.add(const SizedBox(height: 20));
   }
   return Column(children: clues);
 }

@@ -54,7 +54,7 @@ Column allLetters(WidgetRef ref) {
 
 Widget keyWidget(String letter, VoidCallback onTap, Widget childWidget) {
   final buttonColor = HexColor('#818384');
-  const double marginSpace = 2.0;
+  const double marginSpace = 4.0;
   const double circularRadius = 8;
 
   return InkWell(
@@ -64,9 +64,10 @@ Widget keyWidget(String letter, VoidCallback onTap, Widget childWidget) {
         borderRadius: BorderRadius.circular(circularRadius),
         color: buttonColor,
       ),
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.all(marginSpace),
-      width: 32,
+      height: 48,
+      width: 48,
       child: Center(child: childWidget),
     ),
   );
@@ -85,7 +86,7 @@ Widget keyBoardButton(String letter, VoidCallback onTap) {
       letter, onTap, Text(
         letter,
         style: const TextStyle(
-            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
       ),
     );
 

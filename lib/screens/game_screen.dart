@@ -26,10 +26,11 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final isWon = ref.watch(textInputProvider).isWon;
     final displayText = showAnswer(ref);
 
-    const defaultPinTheme = PinTheme(
+    var defaultPinTheme = PinTheme(
       width: 56,
       height: 60,
-      textStyle: TextStyle(
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(0), border: Border.all(color: Colors.grey)),
+      textStyle: const TextStyle(
         color: Colors.white,
         fontSize: 20,
       ),
@@ -42,40 +43,26 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     return Center(
       child: Column(
         children: [
+          const SizedBox(height: 10),
           Text(
             displayText,
             style: const TextStyle(color: Colors.white, fontSize: 16),
           ),
-
-          // Pinput(
-          //   length: 5,
-          //   defaultPinTheme: defaultPinTheme,
-          //   focusedPinTheme: defaultPinTheme.copyWith(
-          //     decoration: defaultPinTheme.decoration!.copyWith(
-          //       border: Border.all(color: Colors.grey),
-          //     ),
-          //   ),
-          //   onCompleted: (word)=> ref.read(textInputProvider.notifier).enterChar(),
-          // ),
+          const SizedBox(height: 10),
+          ((showClues)? showAllClues(ref): const SizedBox()),
           Container(
-            margin: const EdgeInsets.all(10),
-            child: TextField(
-              textCapitalization: TextCapitalization.characters,
-              maxLength: 5,
+            child: Pinput(
+              defaultPinTheme: defaultPinTheme,
+              length: 5,
               controller: textInputNotifier.controller,
-              keyboardType: TextInputType.none,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-              ),
             ),
           ),
+          SizedBox(height: 50),
           Container(
             margin: const EdgeInsets.only(bottom: 32),
             child: const KeyboardWidget(),
           ),
 
-          if (showClues) showAllClues(ref) else const SizedBox()
         ],
       ),
     );
