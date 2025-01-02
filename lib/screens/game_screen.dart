@@ -12,36 +12,46 @@ class GameScreen extends ConsumerStatefulWidget {
 }
 
 class _GameScreenState extends ConsumerState<GameScreen> {
-  late Future<String> actualWord;
+  // late Future<String> actualWord;
 
   @override
   void initState() {
     super.initState();
-    actualWord = fetchWord();
+    // actualWord = fetchWord();
   }
 
   @override
   Widget build(BuildContext context) {
     final textInputNotifier = ref.read(textInputProvider.notifier);
+    final result = getResult(ref);
+    final actualWord = ref.watch(textInputProvider).actualWord;
 
     return Center(
       child: Column(
         children: [
-          FutureBuilder(
-              future: actualWord,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                }
-                return Text(
-                  snapshot.data ?? '',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                  ),
-                );
-              }),
-
+          // FutureBuilder(
+          //     future: actualWord,
+          //     builder: (context, snapshot) {
+          //       if (snapshot.connectionState == ConnectionState.waiting) {
+          //         return CircularProgressIndicator();
+          //       }
+          //       return Text(
+          //         snapshot.data ?? '',
+          //         style: const TextStyle(
+          //           color: Colors.white,
+          //           fontSize: 20,
+          //         ),
+          //       );
+          //     }),
+          // Text(result),
+          Text(
+            actualWord,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+            ),
+          ),
+          showOldWords(ref),
           Container(
             margin: const EdgeInsets.all(10),
             child: TextField(
@@ -56,9 +66,18 @@ class _GameScreenState extends ConsumerState<GameScreen> {
             ),
           ),
           // const Spacer(),
+          Text(
+            result,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+            ),
+          ),
           Container(
-              margin: EdgeInsets.only(bottom: 32),
-              child: const KeyboardWidget())
+            margin: const EdgeInsets.only(bottom: 32),
+            child: const KeyboardWidget(),
+          ),
+          ref.read(textInputProvider.notifier).getClues()
         ],
       ),
     );
