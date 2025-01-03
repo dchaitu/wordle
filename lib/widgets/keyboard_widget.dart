@@ -4,7 +4,6 @@ import 'package:wordle/provider/text_input_provider.dart';
 import 'package:wordle/widgets/color_utils.dart';
 
 class KeyboardWidget extends ConsumerWidget {
-  // final TextEditingController controller;
   const KeyboardWidget({
     super.key,
   });
@@ -15,29 +14,27 @@ class KeyboardWidget extends ConsumerWidget {
   }
 }
 
-Column allLetters(WidgetRef ref) {
+Widget allLetters(WidgetRef ref) {
   const List<String> allRows = [
-    'QWERTYUIOP',
-    'ASDFGHJKL',
-    'ZXCVBNM',
-    'Enter Button',
-    'Back Button'
+    'Q W E R T Y U I O P',
+    'A S D F G H J K L',
+    'Enter Z X C V B N M Back',
   ];
 
   List<Row> keyboard = [];
   for (String row in allRows) {
     List<Widget> eachRow = [];
-    if (row.contains('Enter Button')) {
-      eachRow.add(keyBoardButton(
-          row, () => ref.read(textInputProvider.notifier).enterChar()));
-    } else if (row.contains('Back Button')) {
-      eachRow.add(keyBoardButton(
-          row, () => ref.read(textInputProvider.notifier).removeChar()));
-    } else {
-      for (var key in row.split('')) {
+
+    for (var key in row.split(' ')) {
+      if (key.contains('Enter')) {
+        eachRow.add(keyBoardButton(
+            key, () => ref.read(textInputProvider.notifier).enterChar()));
+      } else if (key.contains('Back')) {
+        eachRow.add(keyBoardButton(
+            key, () => ref.read(textInputProvider.notifier).removeChar()));
+      } else
         eachRow.add(keyBoardButton(
             key, () => ref.read(textInputProvider.notifier).addChar(key)));
-      }
     }
 
     keyboard.add(Row(
@@ -64,10 +61,8 @@ Widget keyWidget(String letter, VoidCallback onTap, Widget childWidget) {
         borderRadius: BorderRadius.circular(circularRadius),
         color: buttonColor,
       ),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.all(marginSpace),
-      height: 48,
-      width: 48,
       child: Center(child: childWidget),
     ),
   );
@@ -75,10 +70,10 @@ Widget keyWidget(String letter, VoidCallback onTap, Widget childWidget) {
 
 Widget keyBoardButton(String letter, VoidCallback onTap) {
 
-  if (letter == 'Enter Button') {
+  if (letter == 'Enter') {
     return keyWidget(letter, onTap, const Icon(Icons.arrow_forward_ios));
 
-  } else if (letter == 'Back Button') {
+  } else if (letter == 'Back') {
 
     return keyWidget(letter, onTap, const Icon(Icons.backspace_outlined));
   } else {

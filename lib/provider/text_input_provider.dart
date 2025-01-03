@@ -72,7 +72,7 @@ class TextInputNotifier extends StateNotifier<WordCheck> {
   }
 
   void enterChar() {
-    if (state.currentWord.length == 5) {
+    if (state.currentWord.length == 5 &&state.noOfChances>0) {
       if (state.actualWord == state.currentWord) {
         state = state.copyWith(
           isWordEntered: true,
@@ -99,6 +99,23 @@ class TextInputNotifier extends StateNotifier<WordCheck> {
     controller.clear();
     state = state.copyWith(currentWord: '');
   }
+
+  void resetGameState(WidgetRef ref)
+  {
+    final data = ref.watch(userDataProvider);
+    state= state.copyWith(userWords: [],
+      actualWord: data.when(
+          data: (data) => data,
+          error: (error, s) => "ERROR",
+          loading: () => "loading..."),
+      currentWord: '',
+      isWon: false,
+      isMatched: false,
+      isWordEntered: false,
+      showClues: false,
+      noOfChances: 6,);
+  }
+
 }
 
 final textInputProvider =
@@ -110,7 +127,7 @@ final textInputProvider =
       userWords: [],
       actualWord: data.when(
           data: (data) => data,
-          error: (error, s) => error.toString(),
+          error: (error, s) => "ERROR",
           loading: () => "loading..."),
       currentWord: '',
       isWon: false,

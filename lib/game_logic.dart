@@ -23,7 +23,6 @@ Future<String> fetchWord() async {
   }
 }
 
-
 Widget showOldWords(WidgetRef ref) {
   List<String> userWords = ref.read(textInputProvider).userWords;
   if (userWords.isNotEmpty) {
@@ -34,30 +33,45 @@ Widget showOldWords(WidgetRef ref) {
   }
 }
 
+Widget clueLetters(String letter,Color color)
+{
+  double currLetterSpacing = 50.0;
+
+  return Container(
+    color: color,
+    margin: const EdgeInsets.all(4.0),
+    height: 55,
+    width: 55,
+    child: Center(
+      child: Text(letter,
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              letterSpacing: currLetterSpacing)),
+    ),
+  );
+}
+
+
 Widget showClue(WidgetRef ref, String word) {
-  List<TextSpan> letters = [];
+  List<Widget> letters = [];
   String actualWord = ref.read(textInputProvider).actualWord;
+  print("actualWord $actualWord");
   double currLetterSpacing = 50.0;
   for (int i = 0; i < actualWord.length; i++) {
     if (word[i] == actualWord[i]) {
-      letters.add(TextSpan(
-          text: word[i],
-          style: TextStyle(
-              color: Colors.green, fontSize: 20, letterSpacing: currLetterSpacing)));
+      letters.add(clueLetters(word[i],Colors.green)
+      );
     } else if (actualWord.contains(word[i])) {
-      letters.add(TextSpan(
-          text: word[i],
-          style: TextStyle(
-              color: Colors.orange, fontSize: 20, letterSpacing: currLetterSpacing)));
+      letters.add(clueLetters(word[i],Colors.orange));
     } else {
-      letters.add(TextSpan(
-          text: word[i],
-          style: TextStyle(
-              color: Colors.red, fontSize: 20, letterSpacing: currLetterSpacing)));
+      letters.add(clueLetters(word[i],Colors.redAccent));
     }
   }
 
-  Widget newClue = RichText(text: TextSpan(children: letters));
+  Widget newClue =
+      Row(mainAxisAlignment: MainAxisAlignment.center,
+          children: letters);
   return newClue;
 }
 
